@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+
 import 'firebase_options.dart';
+import 'screens/splash_screen.dart';
+import 'screens/login_screen.dart';
+import 'screens/home_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Initialize Firebase
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   runApp(const MyApp());
@@ -17,27 +20,21 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'My First App',
+      title: 'Pastel Beauty ERP',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.pink),
         useMaterial3: true,
       ),
-      home: const HomeScreen(),
-    );
-  }
-}
 
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+      // App starts from Splash Screen
+      home: const SplashScreen(),
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Firebase Connected')),
-      body: const Center(
-        child: Text('Firebase is initialized!', style: TextStyle(fontSize: 24)),
-      ),
+      // Named routes
+      routes: {
+        LoginScreen.routeName: (ctx) => const LoginScreen(),
+        HomeScreen.routeName: (ctx) => const HomeScreen(),
+      },
     );
   }
 }
