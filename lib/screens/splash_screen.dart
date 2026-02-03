@@ -1,5 +1,6 @@
-import 'dart:async';
+// import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import 'login_screen.dart';
 import 'home_screen.dart';
@@ -15,34 +16,38 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
+    _checkLogin();
+  }
 
-    // Splash delay (3 seconds)
-    Timer(const Duration(seconds: 3), () {
-      bool isLoggedIn =
-          false; // later replace with Firebase / SharedPreferences
+  void _checkLogin() async {
+    await Future.delayed(const Duration(seconds: 3));
 
-      if (isLoggedIn) {
-        Navigator.pushReplacementNamed(context, HomeScreen.routeName);
-      } else {
-        Navigator.pushReplacementNamed(context, LoginScreen.routeName);
-      }
-    });
+    final user = FirebaseAuth.instance.currentUser;
+
+    if (!mounted) return;
+
+    if (user == null) {
+      Navigator.pushReplacementNamed(context, LoginScreen.routeName);
+    } else {
+      Navigator.pushReplacementNamed(context, HomeScreen.routeName);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.pink.shade50,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: const [
-            Icon(Icons.store, size: 80, color: Colors.pink),
+            Icon(Icons.storefront, size: 80, color: Colors.pink),
             SizedBox(height: 16),
             Text(
-              'Pastel Beauty ERP',
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+              'Pastel Beauty',
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 30),
+            SizedBox(height: 20),
             CircularProgressIndicator(),
           ],
         ),
