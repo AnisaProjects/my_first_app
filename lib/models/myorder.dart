@@ -24,7 +24,7 @@ class Order {
       createdAt: (map['createdAt'] as Timestamp).toDate(),
       items: (map['items'] as List<dynamic>?)
               ?.map((item) => CartItem.fromMap(item as Map<String, dynamic>))
-              .toList() ??
+              .toList() 
           [],
     );
   }
