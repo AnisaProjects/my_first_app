@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class RegisterScreen extends StatefulWidget {
+  static const routeName = '/register';
+
   const RegisterScreen({super.key});
 
   @override
@@ -26,12 +28,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   Future<void> _register() async {
-    // 1) Validate basic form rules
-    if (!_formKey.currentState!.validate()) {
-      return;
-    }
+    if (!_formKey.currentState!.validate()) return;
 
-    // 2) Check if passwords match
     if (_passwordController.text.trim() != _confirmController.text.trim()) {
       ScaffoldMessenger.of(
         context,
@@ -44,13 +42,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
     });
 
     try {
-      // 3) Call Firebase Auth to create user
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: _emailController.text.trim(),
         password: _passwordController.text.trim(),
       );
 
-      // 4) On success: show message & go back to Login
       if (!mounted) return;
 
       ScaffoldMessenger.of(context).showSnackBar(
@@ -59,9 +55,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
         ),
       );
 
-      Navigator.pop(context); // back to previous screen (e.g. Login)
+      Navigator.pop(context);
     } on FirebaseAuthException catch (e) {
-      // Firebase-specific errors
       String message = 'Registration failed';
 
       if (e.code == 'email-already-in-use') {
@@ -76,7 +71,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
         context,
       ).showSnackBar(SnackBar(content: Text(message)));
     } catch (_) {
-      // Any other errors
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Something went wrong. Please try again.'),
@@ -159,7 +153,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
               ),
               const SizedBox(height: 24),
 
-              // Register button or loader
               SizedBox(
                 width: double.infinity,
                 child: _isLoading

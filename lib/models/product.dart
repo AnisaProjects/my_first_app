@@ -4,7 +4,7 @@ class Product {
   final String category;
   final double price;
   final int stock;
-  final String? imagePath; // local image path (image_picker)
+  final String? imagePath;
 
   Product({
     required this.id,
@@ -15,19 +15,7 @@ class Product {
     this.imagePath,
   });
 
-  /// Create Product object from Firestore document
-  factory Product.fromFirestore(String id, Map<String, dynamic> data) {
-    return Product(
-      id: id,
-      name: data['name'] as String? ?? '',
-      category: data['category'] as String? ?? '',
-      price: (data['price'] as num?)?.toDouble() ?? 0.0,
-      stock: (data['stock'] as num?)?.toInt() ?? 0,
-      imagePath: data['imagePath'] as String?,
-    );
-  }
-
-  /// Convert Product object to Firestore map
+  // Convert Product to Map for Firestore
   Map<String, dynamic> toMap() {
     return {
       'name': name,
@@ -38,7 +26,7 @@ class Product {
     };
   }
 
-  /// Copy Product with updated values (useful for update)
+  // Copy Product with optional changes
   Product copyWith({
     String? id,
     String? name,
@@ -54,6 +42,18 @@ class Product {
       price: price ?? this.price,
       stock: stock ?? this.stock,
       imagePath: imagePath ?? this.imagePath,
+    );
+  }
+
+  // Create Product from Firestore Map
+  factory Product.fromMap(String id, Map<String, dynamic> map) {
+    return Product(
+      id: id,
+      name: map['name'] ?? '',
+      category: map['category'] ?? '',
+      price: (map['price'] ?? 0).toDouble(),
+      stock: (map['stock'] ?? 0).toInt(),
+      imagePath: map['imagePath'],
     );
   }
 }
